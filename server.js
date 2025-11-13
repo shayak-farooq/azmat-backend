@@ -1,8 +1,10 @@
 const express = require('express')
 const userRoutes = require('./routes/userRoutes')
+const productRoutes = require('./routes/ProductRoutes')
 const mongoose = require('mongoose');
 require('dotenv/config')
 const app = express()
+//env 
 const PORT = process.env.PORT
 const MONGO_URI = process.env.MONGO_URI
 // connect mongodb
@@ -16,10 +18,12 @@ mongoose.connect(MONGO_URI)
     console.error("Mongodb connection error:",err)
     process.exit(1)
 })
-
+//middlewares 
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
-app.use('/api',userRoutes)
+//Routes
+app.use('/api/user',userRoutes)
+app.use('/api/products',productRoutes)
 
 app.listen(PORT,()=>{
     console.log(`server is running on port ${PORT}`)
