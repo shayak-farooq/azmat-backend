@@ -2,14 +2,15 @@ const User = require('../models/usersModel')
 const transporter = require('../services/NodeMailer');
 const bcrypt = require('bcryptjs')
 require('dotenv/config')
+
 // Temporary storage
-const tempStorage ={}
+const tempStorage = {}
 // delete temp storage after 10 minutes
-function deleteTempStorage(store,key){
-    setTimeout(()=>{
+function deleteTempStorage(store, key) {
+    setTimeout(() => {
         console.log(`deleted`)
         delete store[key]
-    },30*1000)
+    }, 10 * 60 * 1000)
 }
 // otp generation function
 function generateOTP() {
@@ -20,9 +21,9 @@ function generateOTP() {
 async function handleSignup(req, res) {
     try {
         const { name, email, password } = req.body
-        const user = await User.find({email})
-        if(user.email){
-            return res.status(409).json({err:"user already exists"})
+        const user = await User.find({ email })
+        if (user.email) {
+            return res.status(409).json({ err: "user already exists" })
         }
         // Hashing password
         const salt = bcrypt.genSaltSync(10);
@@ -36,7 +37,7 @@ async function handleSignup(req, res) {
             hashedPassword,
             OTP
         }
-        deleteTempStorage(tempStorage,email)
+        deleteTempStorage(tempStorage, email)
         const info = await transporter.sendMail({
             from: process.env.EMAIL_USER,
             to: email,
@@ -57,13 +58,13 @@ async function verifySignupOtp(req, res) {
         if (!otp) {
             return res.status(403).json({ err: "otp is required" })
         }
-        if(!tempStorage[email].OTP){
+        if (!tempStorage[email].OTP) {
             return res.status(403).json({ err: `otp expired` })
         }
         if (otp !== tempStorage[email].OTP) {
             return res.status(403).json({ err: `invalid otp` })
         }
-        if(!tempStorage[email].name){
+        if (!tempStorage[email].name) {
             return res.status(403).json({ err: `user session expired` })
         }
         // save user to database
@@ -104,7 +105,7 @@ async function handleForgetPassword(req, res) {
     }
     let OTP = generateOTP()
     console.log(OTP)
-    tempStorage[email]={OTP}
+    tempStorage[email] = { OTP }
     const info = await transporter.sendMail({
         from: process.env.EMAIL_USER,
         to: email,
