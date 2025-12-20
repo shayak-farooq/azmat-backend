@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router()
-const {handleSignup,verifySignupOtp,handleLogin,handleForgetPassword,verifyForgetOtp} = require('../controllers/userController')
+const {handleSignup,verifySignupOtp,handleLogin,handleForgetPassword,verifyForgetOtp,handleProfile} = require('../controllers/userController');
+const { isAuthorized } = require('../middlewares/IsAuthorized');
+// profle route
+router.get('/profile',isAuthorized,handleProfile)
 //signup routes
 router.post('/signup',handleSignup)
 router.post('/verifysignupotp',verifySignupOtp)

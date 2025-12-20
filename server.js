@@ -1,5 +1,6 @@
 const express = require('express')
 const userRoutes = require('./routes/userRoutes')
+const adminRoute = require('./routes/adminRoute')
 const productRoutes = require('./routes/ProductRoutes')
 const mongoose = require('mongoose');
 require('dotenv/config')
@@ -26,6 +27,7 @@ app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 //Routes
 app.use('/api/user',userRoutes)
+app.use('/api/admin',adminRoute)
 app.use('/api/products',productRoutes)
 
 app.listen(PORT,()=>{

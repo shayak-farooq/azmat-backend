@@ -1,4 +1,5 @@
-const User = require('../models/usersModel')
+const User = require('../models/usersModel');
+const { setUser, getUser } = require('../services/Auth');
 const transporter = require('../services/NodeMailer');
 const bcrypt = require('bcryptjs')
 require('dotenv/config')
@@ -14,14 +15,13 @@ function deleteTempStorage(store, key) {
 }
 // otp generation function
 function generateOTP() {
-    const otp = Math.floor(Math.random() * 9000 + 1000)
+    const otp = Math.floor(Math.random() * 900000 + 100000)
     return otp
 }
 
 async function handleSignup(req, res) {
     try {
         const { name, email, password } = req.body
-        console.log(req.body)
         const user = await User.find({ email })
         if (user.email) {
             return res.status(409).json({ err: "user already exists" })
@@ -55,30 +55,29 @@ async function handleSignup(req, res) {
 }
 async function verifySignupOtp(req, res) {
     try {
-        const { email, otp } = req.body
+        const { name, email, otp } = req.body
+        console.log(req.body)
+        console.log(tempStorage[email])
         if (!otp) {
             return res.status(403).json({ err: "otp is required" })
         }
-        if (!tempStorage[email].OTP) {
-            return res.status(403).json({ err: `otp expired` })
+        if (!tempStorage[email]) {
+            return res.status(403).json({ err: "OTP expired or invalid email" })
         }
-        if (otp !== tempStorage[email].OTP) {
+        if (Number(otp) !== tempStorage[email].OTP) {
             return res.status(403).json({ err: `invalid otp` })
         }
-        if (!tempStorage[email].name) {
-            return res.status(403).json({ err: `user session expired` })
-        }
         // save user to database
-        await User.create({
+        const user = await User.create({
             email: email,
-            name: tempStorage[email].name,
+            name: name,
             password: tempStorage[email].hashedPassword
         })
         // empty temporary storage after being used
-        console.log(tempStorage[email])
         delete tempStorage[email]
-        console.log(tempStorage[email])
-        return res.end('signup successfull')
+        const token = setUser(user)
+        console.log(token)
+        return res.status(200).json({ token:token, message: 'signup successfull' })
     } catch (err) {
         console.log(err);
     }
@@ -86,22 +85,19 @@ async function verifySignupOtp(req, res) {
 async function handleLogin(req, res) {
     try {
         const { email, password } = req.body
-        console.log(email, password )
+        console.log(req.body)
         const user = await User.findOne({ email })
-        if (!user) {
-            return res.json({ err: `invalid email` })
+        if (!user || !bcrypt.compareSync(password, user.password)) {
+            return res.status(401).json({ err: `invalid email or passoword` })
         }
-        if (!bcrypt.compareSync(password, user.password)) {
-            return res.json({ err: `invalid email` })
-        }
-        res.status(200).json({ message: 'login successfully' })
-    } catch (err) {
+        const token = setUser(user)
+    return res.status(200).json({ token: token,role:user.role, message: 'login successfully' })
+} catch (err) {
 
-    }
+}
 }
 async function handleForgetPassword(req, res) {
     const { email } = req.body
-    console.log(email)
     const user = await User.findOne({ email })
     if (!user) {
         return res.status(404).json({ err: "email not found" })
@@ -130,4 +126,12 @@ async function verifyForgetOtp(req, res) {
     }
     return res.status(200).json({ message: "OTP verified" })
 }
-module.exports = { handleSignup, verifySignupOtp, handleLogin, handleForgetPassword, verifyForgetOtp }
+async function handleProfile(req,res){
+    try {
+        const user = await User.findById(req.user._id)
+        return res.status(200).json({name:user.name,email:user.email,address:user.address,role:user.role})
+    } catch (err) {
+        
+    }
+}
+module.exports = { handleSignup, verifySignupOtp, handleLogin, handleForgetPassword, verifyForgetOtp,handleProfile }

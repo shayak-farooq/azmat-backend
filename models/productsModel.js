@@ -8,6 +8,9 @@ const productSchema = new mongoose.Schema({
         required: [true, 'Product title is required'],
         maxlength: [150, 'Title too long']
     },
+    batchNo:{
+        type:String,
+    },
     desc: {
         type: String,
         trim: true,
@@ -24,11 +27,7 @@ const productSchema = new mongoose.Schema({
         min: 0,
         max: 5,
     },
-    catagory: {
-        type:String,
-        trim:true
-    },
-    stock: Number,
+    inStock: Number,
     netWeight: String,
     image: [String],
 }, { timestamps: true })
