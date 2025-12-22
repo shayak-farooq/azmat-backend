@@ -4,10 +4,9 @@ async function allProducts(req, res) {
     //will receive from frontende limit e.g 30
     const skip = 30
     const limit = 1
-    console.log(`allproducts`);
     // const products = await Product.find({}).limit(limit).skip(skip)
     const products = await Product.find({})
-    return res.status(201).json({ products })
+    return res.status(200).json({ products })
 }
 async function singleproduct(req, res) {
     const {id} = req.params

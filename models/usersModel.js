@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Product = require('./productsModel')
 
 const userSchema = new mongoose.Schema({
     name: { type: String, required: true },
@@ -16,6 +17,18 @@ const userSchema = new mongoose.Schema({
             state: { type: String, required: true },
             postalCode: { type: String, required: true },
             country: { type: String, required: true },
+        }
+    ],
+    cart:[
+        {
+            productid:{
+                type:mongoose.Schema.Types.ObjectId,
+                ref:'Product'
+            },
+            quantity:{
+                type:Number,
+                default:1
+            }
         }
     ],
     updatedAt: Date
