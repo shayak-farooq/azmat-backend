@@ -6,7 +6,7 @@ const userSchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     role: { type: String, enum: ['USER', 'ADMIN'], default: 'USER' },
-    phone: { type: String, unique: true },
+    phone: [{ type: Number}],
     address: [
         {
             label: String, // e.g. "Home", "Office"
@@ -19,9 +19,9 @@ const userSchema = new mongoose.Schema({
             country: { type: String, required: true },
         }
     ],
-    cart:[
+    cartitems:[
         {
-            productid:{
+            productdetails:{
                 type:mongoose.Schema.Types.ObjectId,
                 ref:'Product'
             },
