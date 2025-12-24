@@ -4,11 +4,11 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "start": "node server.js"
   },
-  "author": "",
+  "author": "Arsenic Abee",
   "license": "ISC",
-  "description": "",
   "dependencies": {
     "bcryptjs": "^3.0.3",
     "cors": "^2.8.5",
@@ -18,5 +18,15 @@
     "mongoose": "^8.19.3",
     "nodemailer": "^7.0.10",
     "nodemon": "^3.1.10"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shayak-farooq/azmat-backend.git"
+  },
+  "bugs": {
+    "url": "https://github.com/shayak-farooq/azmat-backend/issues"
+  },
+  "homepage": "https://github.com/shayak-farooq/azmat-backend#readme",
+  "description": ""
 }
