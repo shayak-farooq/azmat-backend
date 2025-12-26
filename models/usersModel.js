@@ -6,16 +6,15 @@ const userSchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     role: { type: String, enum: ['USER', 'ADMIN'], default: 'USER' },
-    phone: [{ type: Number}],
+    phone: [{ type: String}],
     address: [
         {
-            label: String, // e.g. "Home", "Office"
-            houseNo: String,
+            building: String,
             area: { type: String, required: true },
             landmark: String,
             city: { type: String, required: true },
             state: { type: String, required: true },
-            postalCode: { type: String, required: true },
+            pincode: { type: String, required: true },
             country: { type: String, required: true },
         }
     ],

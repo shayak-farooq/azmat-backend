@@ -11,7 +11,7 @@ async function getCart(req, res) {
             model: Products
         });
         console.log(user)
-        return res.status(200).json({ products: user.cartitems })
+        return res.status(200).json({name:user.name,phone:user.phone, products: user.cartitems, addresses:user.address })
     } catch (error) {
 
     }
@@ -65,7 +65,7 @@ async function updateQuantity(req, res) {
     try {
         const productid = req.params.id
         const userid = req.user._id
-        const quantity = req.body
+        const {quantity} = req.body
 
         console.log(
             'productid', productid,
@@ -78,7 +78,7 @@ async function updateQuantity(req, res) {
                 'cartitems.productdetails':productid
             },
             {
-                $set:{"cartitems.$.quantity" : quantity }
+                $set:{"cartitems.$.quantity": quantity }
             }
         )
         console.log(user)

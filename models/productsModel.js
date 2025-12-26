@@ -27,9 +27,13 @@ const productSchema = new mongoose.Schema({
         min: 0,
         max: 5,
     },
+    productImages:[
+        {
+            type:String
+        }
+    ],
     inStock: Number,
     netWeight: String,
-    image: [String],
 }, { timestamps: true })
 
 module.exports = mongoose.model('product', productSchema)

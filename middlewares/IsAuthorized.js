@@ -13,7 +13,6 @@ function isAuthorized(req,res,next){
         return res.status(401).json({err:"Not Authorized"})
     }
     req.user = user
-    console.log('middleware',user)
     next()
 }
 function isAdmin(req,res,next){

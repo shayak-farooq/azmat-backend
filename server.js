@@ -4,6 +4,7 @@ const adminRoute = require('./routes/adminRoute')
 const productRoutes = require('./routes/ProductRoutes')
 const cartRoutes = require('./routes/cartRoutes')
 const orderRoute = require('./routes/orderRoute')
+const path = require('path')
 
 const mongoose = require('mongoose');
 require('dotenv/config')
@@ -28,6 +29,8 @@ mongoose.connect(MONGO_URI)
 app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+app.use("/images", express.static(path.join(__dirname, "product_images")));
+
 //Routes
 app.use('/api/user', userRoutes)
 app.use('/api/products', productRoutes)
