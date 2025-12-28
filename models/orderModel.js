@@ -5,7 +5,7 @@ const OrderSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     },
-    produuctdetails: [{
+    productdetails: [{
         productid: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Product'
@@ -17,53 +17,59 @@ const OrderSchema = new mongoose.Schema({
             },
             shippingCharges: {
                 type: Number,
-                required: true
+                // required: true
             },
             otherCharges: {
                 type: Number,
             }
         },
-        quantity:{
-            type:Number,
-            required:true,
+        quantity: {
+            type: Number,
+            required: true,
             min: [1, 'Quantity must be at least 1']
+        },
+        TotalProductPrice: {
+            type: Number,
         }
-
     }],
-    // phone no
-    phoneNo: {
+    totalOrderPrice: {
         type: Number,
-        required: true
     },
-    alternatePhoneNo: {
-        type: Number
-    },
+    // phone no
+
     // Order Date and time and delivery data
     deliveryDate: {
-        expectedDeliveryDate:{
+        expectedDeliveryDate: {
             type: Date,
-            default:()=> new Date(Date.now() + 10 * 24 * 60 * 60 * 1000) //10 days after now date
+            default: () => new Date(Date.now() + 10 * 24 * 60 * 60 * 1000) //10 days after now date
         },
-        actualDeliveryDate:{
-            type:Date
+        actualDeliveryDate: {
+            type: Date
         }
 
     },
     // address on which item is delivered or to be delivered
-    status:{
-        type:String,
-        enum:['delivered','shipped','orderConfirmed'],
-        default:'orderConfirmed'
+    status: {
+        type: String,
+        enum: ['delivered', 'shipped', 'orderConfirmed'],
+        default: 'orderConfirmed'
     },
     address: {
         label: String, // e.g. "Home", "Office"
-        houseNo: String,
-        area: { type: String, required: true },
-        landmark: String,
-        city: { type: String, required: true },
-        state: { type: String, required: true },
-        postalCode: { type: String, required: true },
         country: { type: String, required: true },
+        state: { type: String, required: true },
+        city: { type: String, required: true },
+        area: { type: String, required: true },
+        building: String,
+        landmark: String,
+        pincode: { type: String, required: true },
+        phone: {
+            type: Number,
+            required: true
+        },
+        alternatePhone: {
+            type: Number
+        },
     },
     // payment method
     paymentMethod: {

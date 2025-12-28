@@ -129,27 +129,23 @@ async function verifyForgetOtp(req, res) {
 async function handleProfile(req,res){
     try {
         const user = await User.findById(req.user._id)
-        return res.status(200).json({name:user.name,email:user.email,address:user.address,role:user.role,id:user._id,phone:user.phone})
+        return res.status(200).json({name:user.name,email:user.email,address:user.address,role:user.role,id:user._id})
     } catch (err) {
         
     }
 }
 async function addAddress(req,res){
     try {
-        const {phone,...address} = req.body
-        console.log('phone',phone)
-        console.log('address',address)
+        const {...address} = req.body
         const user = await User.findByIdAndUpdate(
             req.user._id,
             {
-                $push:{
-                    phone:phone,
-                    address:address}
+                $push:{address:address}
             },
             {new:true}
         )
         console.log(user)
-        return res.status(200).json({name:user.name,address:user.address,id:user_id,phone:user.phone})
+        return res.status(200).json({name:user.name,address:user.address,id:user_id})
     } catch (err) {
         
     }
@@ -157,7 +153,6 @@ async function addAddress(req,res){
 async function deleteAddress(req,res){
     try {
         const addressid = req.params.id
-        console.log(addressid)
         const user = await User.findByIdAndUpdate(
             req.user._id,
             {
@@ -175,9 +170,6 @@ async function deleteAddress(req,res){
 async function updateAddress(req,res){
     try {
         const addressid = req.params.id
-        console.log(addressid)
-        console.log(req.body)
-
         const user = await User.findOneAndUpdate(
             {
                 _id:req.user._id,

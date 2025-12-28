@@ -5,12 +5,12 @@ const User = require('../models/usersModel')
 async function getCart(req, res) {
     try {
         const userid = req.user._id
-        console.log(userid)
+        // console.log(userid)
         const user = await User.findById(userid).populate({
             path: 'cartitems.productdetails',
             model: Products
         });
-        console.log(user)
+        // console.log(user)
         return res.status(200).json({name:user.name,phone:user.phone, products: user.cartitems, addresses:user.address })
     } catch (error) {
 
