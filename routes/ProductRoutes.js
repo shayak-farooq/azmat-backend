@@ -18,8 +18,9 @@ const upload = multer({ storage: storage })
 
 router.get("/",allProducts)
 router.get('/singleproduct/id=:id',singleproduct)
+//admin routes
 router.post('/addproduct',upload.array('Product_Images',5),isAuthorized,isAdmin,addProduct)
-router.put('/updateproduct/id=:id',isAuthorized,isAdmin,updateProduct)
-router.delete('/deleteproduct/id=:id',isAuthorized,isAdmin,deleteProduct)
+router.put('/updateproduct/id=:id',upload.array('NewImages',5),isAuthorized,isAdmin,updateProduct)
+// router.delete('/deleteproduct/id=:id',isAuthorized,isAdmin,deleteProduct)
 
 module.exports = router

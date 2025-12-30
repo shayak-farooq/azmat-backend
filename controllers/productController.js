@@ -16,30 +16,47 @@ async function singleproduct(req, res) {
 
 //add only admin permission
 async function addProduct(req, res) {
-    const { title, batchNo, desc, price, inStock } = req.body
-    if (!title || !batchNo || !desc || !price || !inStock) {
+    const { title, batchNo, desc, price, inStock, discount } = req.body
+    if (!title || !batchNo || !desc || !price || !inStock || !discount) {
         return res.status(400).json({ err: "all fields are required" })
     }
     console.log(req.files)
-    const filenames = req.files.map(item => item.filename )
+    const filenames = req.files.map(item => item.filename)
     console.log(filenames)
     console.log(req.body)
     const addedProduct = await Product.create(
         {
             title: title,
-            batchNo:batchNo,
-            desc:desc,
-            price:price,
-            inStock:inStock,
+            batchNo: batchNo,
+            desc: desc,
+            price: price,
+            inStock: inStock,
+            discount: discount,
             productImages: filenames
         }
     )
     return res.status(201).json({ id: addedProduct._id, message: "product added" })
 }
 async function updateProduct(req, res) {
+    const { Product_Images,title, batchNo, desc, price, inStock, discount } = req.body
     const { id } = req.params
-    const updateData = req.body
-    const updatedProduct = await Product.findByIdAndUpdate(id, updateData, { new: true, runValidators: true })
+    // console.log(req.body)
+    console.log('files', req.files)
+    const filenames = [...Product_Images, ...req.files.map((item) => item.filename)]
+    console.log('filenames', filenames)
+    const updatedProduct = await Product.findByIdAndUpdate(id,
+        {
+            $set: {
+                title: title,
+                batchNo: batchNo,
+                desc: desc,
+                price: price,
+                inStock: inStock,
+                discount: discount,
+                productImages: filenames
+            }
+        },
+        { new: true, runValidators: true })
     if (!updatedProduct) {
         return res.status(404).json({ err: "product not found" })
     }

@@ -32,6 +32,9 @@ const productSchema = new mongoose.Schema({
             type:String
         }
     ],
+    discount:{
+        type:Number
+    },
     inStock: Number,
     netWeight: String,
 }, { timestamps: true })

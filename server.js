@@ -5,6 +5,7 @@ const productRoutes = require('./routes/ProductRoutes')
 const cartRoutes = require('./routes/cartRoutes')
 const orderRoute = require('./routes/orderRoute')
 const path = require('path')
+const { isAdmin, isAuthorized } = require('./middlewares/IsAuthorized');
 
 const mongoose = require('mongoose');
 require('dotenv/config')
@@ -36,7 +37,7 @@ app.use('/api/user', userRoutes)
 app.use('/api/products', productRoutes)
 app.use('/api/cart', cartRoutes)
 app.use('/api/orders', orderRoute)
-app.use('/api/admin', adminRoute)
+app.use('/api/admin',isAuthorized,isAdmin, adminRoute)
 
 app.listen(PORT, () => {
     console.log(`server is running on port ${PORT}`)

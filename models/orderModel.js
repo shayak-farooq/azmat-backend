@@ -51,8 +51,8 @@ const OrderSchema = new mongoose.Schema({
     // address on which item is delivered or to be delivered
     status: {
         type: String,
-        enum: ['delivered', 'shipped', 'orderConfirmed'],
-        default: 'orderConfirmed'
+        enum: ['Delivered', 'Shipped', 'Order Confirmed'],
+        default: 'Order Confirmed'
     },
     address: {
         label: String, // e.g. "Home", "Office"
