@@ -102,6 +102,7 @@ async function handleForgetPassword(req, res) {
     if (!user) {
         return res.status(404).json({ err: "email not found" })
     }
+    res.status(200).json({ message: `Otp sent on email:${email}` })
     let OTP = generateOTP()
     console.log(OTP)
     tempStorage[email] = { OTP:OTP }
@@ -112,7 +113,7 @@ async function handleForgetPassword(req, res) {
     //     text: `your OTP is ${OTP} valid for 10 minutes.\nplease Do not share it with anyone`, // plain‑text body
     // });
     // console.log("Message sent:", info.messageId);
-    return res.status(200).json({ message: `Otp sent on email:${email}` })
+    return 
 }
 
 async function verifyForgetOtp(req, res) {
