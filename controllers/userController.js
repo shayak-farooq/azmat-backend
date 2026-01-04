@@ -117,11 +117,11 @@ async function handleForgetPassword(req, res) {
 
 async function verifyForgetOtp(req, res) {
     const { email, otp } = req.body
-    if (Number(otp) !== tempStorage[email].OTP) {
-        return res.json({ err: "invalid otp" })
+    if (!tempStorage[email]) {
+        return res.status(410).json({ err: "OTP expired" })
     }
-    if (!tempStorage[email].OTP) {
-        return res.json({ err: "OTP expired" })
+    if (Number(otp) !== tempStorage[email].OTP) {
+        return res.status(401).json({ err: "invalid otp" })
     }
     return res.status(200).json({ message: "OTP verified" })
 }
