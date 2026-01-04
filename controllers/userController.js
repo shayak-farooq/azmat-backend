@@ -22,8 +22,8 @@ function generateOTP() {
 async function handleSignup(req, res) {
     try {
         const { name, email, password } = req.body
-        const user = await User.find({ email })
-        if (user.email) {
+        const user = await User.findOne({ email })
+        if (user) {
             return res.status(409).json({ err: "user already exists" })
         }
         // Hashing password
