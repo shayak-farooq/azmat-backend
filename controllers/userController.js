@@ -104,27 +104,36 @@ async function handleForgetPassword(req, res) {
     }
     let OTP = generateOTP()
     console.log(OTP)
-    tempStorage[email] = { OTP }
-    const info = await transporter.sendMail({
-        from: process.env.EMAIL_USER,
-        to: email,
-        subject: "OTP for forget password",
-        text: `your OTP is ${OTP} valid for 10 minutes.\nplease Do not share it with anyone`, // plain‑text body
-    });
-    console.log("Message sent:", info.messageId);
+    tempStorage[email] = { OTP:OTP }
+    // const info = await transporter.sendMail({
+    //     from: process.env.EMAIL_USER,
+    //     to: email,
+    //     subject: "OTP for forget password",
+    //     text: `your OTP is ${OTP} valid for 10 minutes.\nplease Do not share it with anyone`, // plain‑text body
+    // });
+    // console.log("Message sent:", info.messageId);
     return res.status(200).json({ message: `Otp sent on email:${email}` })
 }
 
 async function verifyForgetOtp(req, res) {
     const { email, otp } = req.body
-
-    if (otp !== tempStorage[email].OTP) {
+    if (Number(otp) !== tempStorage[email].OTP) {
         return res.json({ err: "invalid otp" })
     }
     if (!tempStorage[email].OTP) {
         return res.json({ err: "OTP expired" })
     }
     return res.status(200).json({ message: "OTP verified" })
+}
+async function updatePassword(req,res) {
+    const {email,password}=req.body
+    const salt = bcrypt.genSaltSync(10);
+    const hashedPassword = bcrypt.hashSync(password, salt);
+    const user = await User.findOneAndUpdate({email:email},{
+        $set:{password:hashedPassword}
+    },{new:true})
+    console.log(user);
+    return res.status(200).json({ message: "password updated" })
 }
 async function handleProfile(req,res){
     try {
@@ -188,4 +197,4 @@ async function updateAddress(req,res){
     }
 }
 
-module.exports = { handleSignup, verifySignupOtp, handleLogin, handleForgetPassword, verifyForgetOtp,handleProfile,addAddress,deleteAddress,updateAddress }
+module.exports = { handleSignup, verifySignupOtp, handleLogin, handleForgetPassword, verifyForgetOtp,updatePassword,handleProfile,addAddress,deleteAddress,updateAddress }

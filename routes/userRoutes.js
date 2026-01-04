@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router()
-const {handleSignup,verifySignupOtp,handleLogin,handleForgetPassword,verifyForgetOtp,handleProfile,addAddress,deleteAddress,updateAddress} = require('../controllers/userController');
+const {handleSignup,verifySignupOtp,handleLogin,handleForgetPassword,verifyForgetOtp,handleProfile,addAddress,deleteAddress,updateAddress, updatePassword} = require('../controllers/userController');
 const { isAuthorized } = require('../middlewares/IsAuthorized');
 // profle route
 router.get('/profile',isAuthorized,handleProfile)
@@ -16,5 +16,6 @@ router.post('/login',handleLogin)
 //forget password routes
 router.post('/forgetpassword',handleForgetPassword)
 router.post('/verifyforgetotp',verifyForgetOtp)
+router.post('/updatepassword',updatePassword)
 
 module.exports = router
